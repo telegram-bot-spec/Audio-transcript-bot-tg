@@ -1,5 +1,5 @@
 services:
-  - type: worker
+  - type: web
     name: ai-transcription-bot
     env: python
     region: oregon
