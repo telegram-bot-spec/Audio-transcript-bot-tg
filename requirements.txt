@@ -5,9 +5,9 @@ flask==3.0.0
 av==12.3.0
 requests==2.31.0
 numpy==1.24.3
-torch==2.1.0
-torchaudio==2.1.0
 ctranslate2==3.24.0
 tokenizers==0.15.0
 huggingface-hub==0.20.0
 onnxruntime==1.16.0
+filelock==3.13.0
+tqdm==4.66.0
