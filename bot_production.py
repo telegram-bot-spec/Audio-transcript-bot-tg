@@ -12,6 +12,8 @@ from faster_whisper import WhisperModel
 import torch
 from pydub import AudioSegment
 import numpy as np
+from threading import Thread
+from flask import Flask
 
 # Enable logging
 logging.basicConfig(
@@ -19,6 +21,22 @@ logging.basicConfig(
     level=logging.INFO
 )
 logger = logging.getLogger(__name__)
+
+# Flask app for health checks (Render requirement)
+app = Flask(__name__)
+
+@app.route('/')
+def health_check():
+    return "Bot is running!", 200
+
+@app.route('/health')
+def health():
+    return {"status": "healthy", "bot": "AI Transcription Bot"}, 200
+
+def run_flask():
+    """Run Flask in separate thread"""
+    port = int(os.getenv('PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=False, use_reloader=False)
 
 # Initialize Faster-Whisper model (runs locally, 100% FREE!)
 # Using 'base' model for Railway (lighter). For local: use 'large-v3'
@@ -552,6 +570,11 @@ def main():
     
     if not token:
         raise ValueError('TELEGRAM_BOT_TOKEN not set!')
+    
+    # Start Flask server in background thread
+    logger.info('Starting health check server...')
+    flask_thread = Thread(target=run_flask, daemon=True)
+    flask_thread.start()
     
     application = Application.builder().token(token).build()
     
