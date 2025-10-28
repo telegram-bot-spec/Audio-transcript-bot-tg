@@ -4,14 +4,11 @@ services:
     env: python
     region: oregon
     plan: free
-    buildCommand: |
-      apt-get update && apt-get install -y ffmpeg
-      pip install --upgrade pip
-      pip install -r requirements.txt
+    buildCommand: pip install --upgrade pip && pip install -r requirements.txt
     startCommand: python bot_production.py
     envVars:
       - key: TELEGRAM_BOT_TOKEN
         sync: false
-      - key: PYTHON_VERSION
-        value: 3.11.0
+      - key: PORT
+        value: 10000
     autoDeploy: true
